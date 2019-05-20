@@ -8,7 +8,11 @@ Python-funkwhale is a lightweight wrapper over the [Funkwhale](https://funkwhale
 
 ## Installation
 
-So far, the API wrapper is still considered unstable, a proper setup file is in the works. As soon as I can be sure everything works as expected, I will add a setup file here so it can be installed as a proper Pytohn package. For now, the only way to use this package is by copying the funkwhale folder in a directory present in os.path so it can be found during imports.
+```
+git clone https://code.manuelcortez.net/manuelcortez/python-funkwhale
+cd python-funkwhale
+python setup.py install
+```
 
 ## usage
 
