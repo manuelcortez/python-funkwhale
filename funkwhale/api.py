@@ -87,3 +87,10 @@ class API(object):
 
 	def __call__(self, *args, **kwargs):
 		return self._session.method(self._method, *args, **kwargs)
+
+	def full_url(self, method):
+		""" Converts a partial URL such as /api/v1/listen/{id} into https://instance.endpoint/api/v1/listen/track_id """
+		# check if the method is valid.
+		if method.startswith(self._session.API_PREFIX) == False:
+			raise ValueError("the method passed seems to be an invalid URL.")
+		return self._session.instance_endpoint+method

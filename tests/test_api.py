@@ -45,5 +45,17 @@ class testApi(unittest.TestCase):
 		self.assertTrue(artist["id"] == 1)
 		libraries = api.albums.libraries.get(1)
 
+	def test_full_url(self):
+		""" Testing conversion of some URLS provided by the funkwhale API into full URLS available for other applications to do something with those. """
+		api = self.session.get_api()
+		track = api.tracks.get(1)
+		# Make sure the API URL is still valid.
+		self.assertTrue(track["listen_url"].startswith(self.session.API_PREFIX))
+		url = api.full_url(track["listen_url"])
+		self.assertTrue(url.startswith(self.session.instance_endpoint))
+		track["listen_url"] = url
+		self.assertRaises(ValueError, api.full_url, track["listen_url"])
+
+
 if __name__ == "__main__":
 	unittest.main()
