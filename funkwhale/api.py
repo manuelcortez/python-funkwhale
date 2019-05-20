@@ -49,7 +49,7 @@ class Session(object):
 
 	def get(self, method, **params):
 		""" Helper for all GET methods. This should not be used directly. """
-		response = self.http.get(self.instance_endpoint+self.API_PREFIX+self.API_VERSION+method, data=params)
+		response = self.http.get(self.instance_endpoint+self.API_PREFIX+self.API_VERSION+method, params=params)
 		if response.ok == False:
 			raise APIError("Error {error_code}: {text}".format(error_code=response.status_code, text=response.text))
 		return response.json()
@@ -65,9 +65,6 @@ class Session(object):
 				method = method.replace("/libraries", "/{id}/libraries".format(id=args[0]))
 			else:
 				method = method+"/{id}".format(id=args[0])
-		print(method)
-		print(args)
-		print(kwargs)
 		result = getattr(self, extension)(method=method, **kwargs)
 		return result
 
