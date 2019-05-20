@@ -40,16 +40,26 @@ class Session(object):
 			self.token = result["token"]
 			self.http.headers.update(Authorization="Bearer "+self.token)
 
+	def build_url(self, method):
+		""" build the URL that will be later passed to the request methods. """
+		if method.startswith("http:") or method.startswith("https:"):
+			return method
+		parts = ["instance_endpoint", "API_PREFIX", "API_VERSION"]
+		method = "".join([getattr(self, i) for i in parts if i not in method])+method
+		return method
+
 	def post(self, method, **params):
 		""" Helper for all post methods. This should not be used directly. """
-		response = self.http.post(self.instance_endpoint+self.API_PREFIX+self.API_VERSION+method, data=params)
+		url = self.build_url(method)
+		response = self.http.post(url, data=params)
 		if response.ok == False:
 			raise APIError("Error {error_code}: {text}".format(error_code=response.status_code, text=response.text))
 		return response.json()
 
 	def get(self, method, **params):
 		""" Helper for all GET methods. This should not be used directly. """
-		response = self.http.get(self.instance_endpoint+self.API_PREFIX+self.API_VERSION+method, params=params)
+		url = self.build_url(method)
+		response = self.http.get(url, params=params)
 		if response.ok == False:
 			raise APIError("Error {error_code}: {text}".format(error_code=response.status_code, text=response.text))
 		return response.json()
@@ -94,3 +104,9 @@ class API(object):
 		if method.startswith(self._session.API_PREFIX) == False:
 			raise ValueError("the method passed seems to be an invalid URL.")
 		return self._session.instance_endpoint+method
+
+	def direct_get(self, method, **kwargs):
+		return self._session.get(method, **kwargs)
+
+	def direct_post(self, method, **kwargs):
+		return self._session.post(method, **kwargs)

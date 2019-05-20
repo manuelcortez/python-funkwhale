@@ -56,6 +56,12 @@ class testApi(unittest.TestCase):
 		track["listen_url"] = url
 		self.assertRaises(ValueError, api.full_url, track["listen_url"])
 
+	def test_full_urls_support(self):
+		""" Testing support for passing full URLS instead of having to build those by the API wrapper. """
+		api = self.session.get_api()
+		tracks = api.tracks.get(page_size=1)
+		url = tracks["next"]
+		next_tracks = api.direct_get(url)
 
 if __name__ == "__main__":
 	unittest.main()
