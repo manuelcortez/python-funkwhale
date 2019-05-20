@@ -1,13 +1,13 @@
 ﻿# -*- coding: utf-8 -*-
 import unittest
-from funkwhale import api
+from funkwhale import session
 
 class testApi(unittest.TestCase):
 
 	def setUp(self):
 		# For the moment we use the demo Funkwhale server.
 		# Later the API wrapper should have the possibility of using environment variables to fill the class constructor.
-		self.session = api.Session()
+		self.session = session.Session()
 
 	def test_auth(self):
 		""" Testing user authentication against the Funkwhale server. """
@@ -18,7 +18,7 @@ class testApi(unittest.TestCase):
 		""" Testing the exception mechanism present in all API methods. """
 		self.setUp()
 		self.session.username = "demo1"
-		self.assertRaises(api.APIError, self.session.login)
+		self.assertRaises(session.APIError, self.session.login)
 		self.setUp()
 		self.session.login()
 
